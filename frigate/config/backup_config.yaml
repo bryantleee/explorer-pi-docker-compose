@@ -1,0 +1,73 @@
+# Frigate configuration file for Raspberry Pi 5 with Hailo-8 AI Hat
+
+mqtt:
+  enabled: false
+
+detectors:
+  hailo:
+    type: hailo
+    device_id: 0
+
+# Cameras configuration - at least one camera is required
+cameras:
+  # Logitech Webcam C925e USB camera
+  webcam:
+    ffmpeg:
+      inputs:
+        - path: /dev/video0
+          input_args: preset-rtsp-generic
+          roles:
+            - detect
+            - record
+    detect:
+      width: 1280
+      height: 720
+      fps: 5
+    record:
+      enabled: true
+      retain:
+        days: 7
+        mode: motion
+    snapshots:
+      enabled: true
+      timestamp: true
+      bounding_box: true
+      retain:
+        default: 7
+
+# Global settings
+record:
+  enabled: true
+  retain:
+    days: 7
+    mode: motion
+
+snapshots:
+  enabled: true
+  timestamp: true
+  bounding_box: true
+  retain:
+    default: 7
+
+# Motion detection settings
+motion:
+  threshold: 25
+  contour_area: 100
+  delta_alpha: 0.2
+  frame_alpha: 0.2
+  frame_height: 50
+
+# Object detection settings
+objects:
+  track:
+    - person
+    - car
+    - truck
+    - bus
+    - motorcycle
+    - bicycle
+  filters:
+    person:
+      min_area: 5000
+      max_area: 100000
+      min_score: 0.5

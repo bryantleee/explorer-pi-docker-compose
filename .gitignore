@@ -1,0 +1,75 @@
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node modules (if any)
+node_modules/
+
+# Python cache (if any)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Backup files
+*.bak
+*.backup
+
+# Sensitive files
+**/passwords
+**/secrets
+**/keys
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Media files
+*.mp4
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+*.mov
+*.avi
+
+# Python virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# Frigate media directories
+frigate/media/

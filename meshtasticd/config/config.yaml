@@ -1,0 +1,10 @@
+# General Configuration
+General:
+  MaxNodes: 300 
+  MaxMessageQueue: 100 
+  MACAddress: "88:a2:9e:1b:d2:5f"
+
+# Webserver Configuration
+Webserver:
+  Port: 443
+  RootPath: /usr/share/meshtasticd/web

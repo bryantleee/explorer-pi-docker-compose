@@ -1,0 +1,17 @@
+services:
+  meshtasticd:
+    image: meshtastic/meshtasticd:latest
+    container_name: meshtasticd
+    privileged: true
+    ports:
+      - "4403:4403"  # Meshtastic radio interaction port
+      - "443:443"    # Webserver port (HTTPS)
+      - "80:80"      # Webserver port (HTTP)
+    restart: unless-stopped
+    entrypoint: ["sh", "-c"]
+    command: ["meshtasticd --fsdir=/var/lib/meshtasticd --config=/etc/meshtasticd/config.yaml --port=4403"]
+    volumes:
+      - ./config/config.yaml:/etc/meshtasticd/config.yaml
+      - ./config/config.d:/etc/meshtasticd/config.d
+    devices:
+      - "/dev/tbeam:/dev/tbeam"
