@@ -63,16 +63,59 @@ motion:
 objects:
   track:
     - person
-    - car
-    - truck
-    - bus
-    - motorcycle
-    - bicycle
+    - hat
+    - tie
+    - backpack
+    - suitcase
+    - handbag
+    - eye glasses
+    - shoe
+    - cell phone
+    - mouse
+
   filters:
     person:
       min_area: 5000
       max_area: 100000
       min_score: 0.5
+    backpack:
+      min_area: 1000
+      max_area: 20000
+      min_score: 0.4
+    suitcase:
+      min_area: 1500
+      max_area: 25000
+      min_score: 0.4
+    handbag:
+      min_area: 1000
+      max_area: 20000
+      min_score: 0.4
+    hat:
+      min_area: 500
+      max_area: 5000
+      min_score: 0.3
+    tie:
+      min_area: 300
+      max_area: 3000
+      min_score: 0.3
+    eye glasses:
+      min_area: 200
+      max_area: 2000
+      min_score: 0.3
+    shoe:
+      min_area: 200
+      max_area: 2000
+      min_score: 0.3
+    cell phone:
+      min_area: 500
+      max_area: 3000
+      min_score: 0.4
+    mouse:
+      min_area: 300
+      max_area: 2000
+      min_score: 0.3
+
+
 detect:
   enabled: true
 version: 0.16-0
