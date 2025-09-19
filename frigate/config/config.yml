@@ -1,12 +1,26 @@
 # Frigate configuration file for Raspberry Pi 5 with Hailo-8 AI Hat
 
 mqtt:
-  enabled: false
+  enabled: true
+  host: mosquitto
+  port: 1883
+  topic_prefix: frigate
+  client_id: frigate
+  stats_interval: 60
 
 detectors:
   hailo:
     type: hailo8l
     device_id: 0
+
+model:
+  width: 320
+  height: 320
+  input_tensor: nhwc
+  input_pixel_format: rgb
+  input_dtype: int
+  model_type: yolo-generic
+  labelmap_path: /labelmap/coco-80.txt
 
 # Cameras configuration - at least one camera is required
 cameras:
