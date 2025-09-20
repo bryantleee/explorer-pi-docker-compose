@@ -2,11 +2,15 @@
 
 mqtt:
   enabled: true
-  host: mosquitto
+  host: 127.0.0.1
   port: 1883
   topic_prefix: frigate
-  client_id: frigate
+  client_id: explorer
   stats_interval: 60
+  qos: 0
+  
+auth:
+  enabled: false
 
 detectors:
   hailo:
