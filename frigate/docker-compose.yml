@@ -23,7 +23,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /home/bryant/docker/frigate/config:/config
-      - /home/bryant/docker/frigate/media:/media/frigate
+      - /mnt/frigate-videos/frigate:/media/frigate
       - type: tmpfs # Optional: 1GB of memory, reduces SSD/SD Card wear
         target: /tmp/cache
         tmpfs:

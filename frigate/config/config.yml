@@ -11,16 +11,11 @@ mqtt:
 detectors:
   hailo:
     type: hailo8l
+    device: PCIe
     device_id: 0
 
 model:
-  width: 320
-  height: 320
-  input_tensor: nhwc
-  input_pixel_format: rgb
-  input_dtype: int
-  model_type: yolo-generic
-  labelmap_path: /labelmap/coco-80.txt
+  path: https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/v2.14.0/hailo8/yolov8n.hef
 
 # Cameras configuration - at least one camera is required
 cameras:
