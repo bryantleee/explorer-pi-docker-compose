@@ -14,8 +14,8 @@ services:
           memory: 1G
     devices:
       - /dev/hailo0:/dev/hailo0 # Hailo-8 AI Hat device
-      - /dev/video0:/dev/video0 # Logitech Webcam C925e
-      - /dev/video1:/dev/video1 # Logitech Webcam C925e (second device)
+      - /dev/video0:/dev/video0 # Arducam 1080P Day & Night Vision USB Camera
+      # - /dev/video1:/dev/video1 # Logitech Webcam C925e (second device) - COMMENTED OUT
       # - /dev/bus/usb:/dev/bus/usb # Passes the USB Coral, needs to be modified for other versions
       # - /dev/apex_0:/dev/apex_0 # Passes a PCIe Coral, follow driver instructions here https://coral.ai/docs/m2/get-started/#2a-on-linux
       # - /dev/video11:/dev/video11 # For Raspberry Pi 4B

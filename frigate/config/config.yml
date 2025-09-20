@@ -19,20 +19,18 @@ model:
 
 # Cameras configuration - at least one camera is required
 cameras:
-  # Logitech Webcam C925e USB camera - CPU Optimized
-  webcam:
+  # Arducam 1080P Day & Night Vision USB Camera - 2MP with IR LEDs
+  arducam:
     ffmpeg:
       inputs:
         - path: /dev/video0
-          input_args: -f v4l2 -input_format mjpeg -video_size 1280x720 -framerate 15 -fflags nobuffer -avoid_negative_ts make_zero
+          input_args: -f v4l2 -input_format mjpeg -video_size 1920x1080 -framerate 10 -fflags nobuffer -avoid_negative_ts make_zero -threads 2 -thread_type slice
           roles:
             - detect
             - record
     detect:
       width: 1280
       height: 720
-      # width: 640
-      # height: 480
       fps: 5
     record:
       enabled: true
@@ -45,6 +43,33 @@ cameras:
       bounding_box: true
       retain:
         default: 7
+
+  # Logitech Webcam C925e USB camera - CPU Optimized (COMMENTED OUT)
+  # webcam:
+  #   ffmpeg:
+  #     inputs:
+  #       - path: /dev/video0
+  #         input_args: -f v4l2 -input_format mjpeg -video_size 1280x720 -framerate 15 -fflags nobuffer -avoid_negative_ts make_zero
+  #         roles:
+  #           - detect
+  #           - record
+  #   detect:
+  #     width: 1280
+  #     height: 720
+  #     # width: 640
+  #     # height: 480
+  #     fps: 5
+  #   record:
+  #     enabled: true
+  #     retain:
+  #       days: 7
+  #       mode: motion
+  #   snapshots:
+  #     enabled: true
+  #     timestamp: true
+  #     bounding_box: true
+  #     retain:
+  #       default: 7
 
 # Global settings
 record:
