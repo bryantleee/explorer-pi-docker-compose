@@ -10,6 +10,7 @@ import paho.mqtt.client as mqtt
 import meshtastic
 import meshtastic.serial_interface
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import logging
 
 # Configure logging
@@ -101,81 +102,85 @@ class MQTTMeshtasticBridge:
             
             # Format message for Meshtastic
             meshtastic_message = self.construct_meshtastic_message(event_data, msg.topic)
+            if meshtastic_message is None:
+                return
             
             # Send via Meshtastic
-            self.send_meshtastic_message(meshtastic_message)
+            self.meshtastic_interface.sendText(meshtastic_message, channelIndex=self.channel_index, wantAck=True)
             
         except Exception as e:
             logger.error(f"Error processing MQTT message: {e}")
     
-    def construct_meshtastic_message(self, event_data, topic):
-        # allowed_message_types = set({"end"})
+    def calculate_stationary_time(self, path_data, threshold=0.01):
+        """
+        Calculate the total time an object was stationary based on path data.
+        
+        Args:
+            path_data: List of tuples containing ((x, y), timestamp) coordinates
+            threshold: Distance threshold in normalized units for considering movement stationary
+            
+        Returns:
+            float: Total stationary time in seconds, rounded to 1 decimal place
+        """
+        if not path_data or len(path_data) < 2:
+            return 0.0
+            
+        stationary_time = 0.0
+        for i in range(1, len(path_data)):
+            (x1, y1), t1 = path_data[i - 1]
+            (x2, y2), t2 = path_data[i]
+            dist = ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
+            if dist < threshold:
+                stationary_time += t2 - t1
+                
+        return round(stationary_time, 1)
 
-        """Format MQTT event data into a concise Meshtastic message"""
-        timestamp = datetime.now().strftime("%H:%M:%S")
+    def construct_meshtastic_message(self, event_data, topic):
+        if not isinstance(event_data, dict):
+            logger.warning(f"Skipping non-dict event data: {event_data}")
+            return None
+
+        allowed_message_types = {"end"}
+
+        event_type = event_data.get("type")
+        if event_type not in allowed_message_types:
+            logger.warning(f"Skipping message type: {event_type}")
+            return None
+
+        timestamp = datetime.now(ZoneInfo("America/New_York")).strftime("%I:%M:%S %p")
         
-        # Extract key information based on common MQTT event structures
-        message_parts = [f"[{timestamp}]"]
+        after = event_data.get("after", {})
+        before = event_data.get("before", {})
+        start_time = before.get("start_time")
+        end_time = after.get("end_time")
+
+        duration = None
+        if start_time and end_time:
+            duration = round(end_time - start_time, 1)
+
+        # Calculate stationary time using the extracted function
+        path_data = after.get("path_data", [])
+        stationary_time = self.calculate_stationary_time(path_data)
+
+        label = (after.get("label") or before.get("label") or "object").capitalize()
+        camera = after.get("camera") or before.get("camera") or "unknown"
+
+        # Build message
+        if duration is not None:
+            if stationary_time:
+                message = f"{timestamp} | {label} detected for {duration}s, stationary for {stationary_time}s"
+            else:
+                message = f"{timestamp} | {label} detected for {duration}s"
+        else:
+            message = f"{timestamp} | {label} detected"
         
-        # Handle different types of events
-        if isinstance(event_data, dict):
-            # Frigate events (common structure)
-            if "type" in event_data:
-                message_parts.append(f"Type: {event_data['type']}")
-            
-            if "camera" in event_data:
-                message_parts.append(f"Cam: {event_data['camera']}")
-            
-            if "label" in event_data:
-                message_parts.append(f"Label: {event_data['label']}")
-            
-            if "score" in event_data:
-                score = float(event_data['score']) * 100
-                message_parts.append(f"Conf: {score:.0f}%")
-            
-            if "id" in event_data:
-                message_parts.append(f"ID: {event_data['id']}")
-            
-            # Handle motion/object detection
-            if "after" in event_data and "id" in event_data["after"]:
-                message_parts.append(f"Motion: {event_data['after']['id']}")
-            
-            # Handle zone events
-            if "current_zones" in event_data:
-                zones = event_data["current_zones"]
-                if zones:
-                    message_parts.append(f"Zone: {','.join(zones)}")
-            
-            # Handle raw messages
-            if "raw_message" in event_data:
-                raw_msg = event_data["raw_message"][:50]  # Truncate long messages
-                message_parts.append(f"Msg: {raw_msg}")
-        
-        # Join parts and ensure under 200 bytes
-        message = " | ".join(message_parts)
-        
-        # Truncate if too long (leave some buffer for Meshtastic overhead)
+        logger.info(f"Sending Meshtastic message: {message}")
+        # Truncate if too long (leave buffer for Meshtastic overhead)
         if len(message) > 180:
             message = message[:177] + "..."
-        
+
         return message
-    
-    def send_meshtastic_message(self, message):
-        """Send message via Meshtastic"""
-        if not self.meshtastic_interface:
-            logger.error("Meshtastic interface not connected")
-            return
-        
-        try:
-            logger.info(f"Sending to {self.channel_name}: {message}")
-            self.meshtastic_interface.sendText(
-                message, 
-                channelIndex=self.channel_index, 
-                wantAck=True
-            )
-            logger.info("Message sent successfully!")
-        except Exception as e:
-            logger.error(f"Failed to send Meshtastic message: {e}")
+
     
     def run(self):
         """Main run loop"""
