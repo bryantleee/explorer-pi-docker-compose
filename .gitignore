@@ -73,3 +73,6 @@ env/
 
 # Frigate media directories
 frigate/media/
+*.db-shm
+*.db-wal
+
