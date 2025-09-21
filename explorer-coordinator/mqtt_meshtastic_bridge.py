@@ -100,7 +100,7 @@ class MQTTMeshtasticBridge:
                 event_data = {"raw_message": payload}
             
             # Format message for Meshtastic
-            meshtastic_message = self.format_meshtastic_message(event_data, msg.topic)
+            meshtastic_message = self.construct_meshtastic_message(event_data, msg.topic)
             
             # Send via Meshtastic
             self.send_meshtastic_message(meshtastic_message)
@@ -108,7 +108,9 @@ class MQTTMeshtasticBridge:
         except Exception as e:
             logger.error(f"Error processing MQTT message: {e}")
     
-    def format_meshtastic_message(self, event_data, topic):
+    def construct_meshtastic_message(self, event_data, topic):
+        # allowed_message_types = set({"end"})
+
         """Format MQTT event data into a concise Meshtastic message"""
         timestamp = datetime.now().strftime("%H:%M:%S")
         
