@@ -10,3 +10,9 @@ services:
             - ./config:/mosquitto/config
             - ./data:/mosquitto/data
             - ./log:/mosquitto/log
+        networks:
+            - explorer-network
+
+networks:
+    explorer-network:
+        external: true

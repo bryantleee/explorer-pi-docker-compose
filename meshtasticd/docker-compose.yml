@@ -15,3 +15,9 @@ services:
       - ./config/config.d:/etc/meshtasticd/config.d
     devices:
       - "/dev/tbeam:/dev/tbeam"
+    networks:
+      - explorer-network
+
+networks:
+  explorer-network:
+    external: true

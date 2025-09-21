@@ -37,3 +37,9 @@ services:
     environment:
       FRIGATE_RTSP_PASSWORD: "Fudgetown18"
       TZ: "America/New_York" # Update this to your timezone
+    networks:
+      - explorer-network
+
+networks:
+  explorer-network:
+    external: true

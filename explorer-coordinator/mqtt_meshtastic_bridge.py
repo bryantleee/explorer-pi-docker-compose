@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 # --- CONFIGURE THIS ---
 SERIAL_PORT = "/dev/ttyACM0"       # change if needed (Windows example: "COM3")
-MQTT_BROKER = "localhost"          # MQTT broker address
+MQTT_BROKER = "mosquitto"          # MQTT broker address (container name)
 MQTT_PORT = 1883                   # MQTT broker port
 MQTT_TOPIC = "frigate/events"      # MQTT topic to listen to
 MQTT_USERNAME = None               # MQTT username (None if no auth)
