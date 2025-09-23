@@ -5,7 +5,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./mqtt_meshtastic_bridge.py:/app/mqtt_meshtastic_bridge.py
-      - ./simple_monitor.py:/app/simple_monitor.py
       - ./coordinator-v.py:/app/coordinator-v.py
       - /dev/ttyACM0:/dev/ttyACM0  # Meshtastic serial device
     devices:

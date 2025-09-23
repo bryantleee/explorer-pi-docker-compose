@@ -10,7 +10,7 @@ mqtt:
   qos: 0
   
 auth:
-  enabled: false
+  enabled: true
 
 detectors:
   hailo:
@@ -153,6 +153,8 @@ objects:
       max_area: 2000
       min_score: 0.3
 
+face_recognition:
+  enabled: true
 
 detect:
   enabled: true

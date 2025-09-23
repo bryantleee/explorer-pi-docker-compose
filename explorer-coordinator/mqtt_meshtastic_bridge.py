@@ -148,8 +148,11 @@ class MQTTMeshtasticBridge:
         labels = []
         if "label" in after:
             labels.append(after["label"])
-        if "sub_labels" in after and isinstance(after["sub_labels"], list):
-            labels.extend(after["sub_labels"])
+        if "sub_label" in after and isinstance(after["sub_label"], list):
+            if len(after["sub_label"]) > 0:
+                sub_label = after["sub_label"][0]
+                sub_label = sub_label.capitalize()
+                labels.append(f"({sub_label})")
         if not labels and "label" in before:
             labels.append(before["label"])
 
